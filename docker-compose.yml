@@ -1,0 +1,59 @@
+version: '3'
+services:
+  # Configure DB if the project needs it
+#  db:
+#    image: postgres:13-alpine
+#    container_name: postgres_db
+#    environment:
+#      POSTGRES_USER: user
+#      POSTGRES_PASSWORD: password
+#      POSTGRES_DB: mydatabase
+#    ports:
+#      - "5432:5432"
+#    volumes:
+#      - ./postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: ./src/app/backend
+    container_name: backend
+    environment:
+      - NODE_ENV=production # Set the environment to production
+      - PORT=8000           # The port your Node.js app will use
+      # Add other environment variables here if needed
+    ports:
+      - "8000:8000"         # Map the backend service to port 8000
+    volumes:
+      - ./src/app/backend:/usr/src/app # Optionally mount the backend folder for development
+    depends_on:
+      - db                  # If you are still using a database, keep this line
+    networks:
+      - gt-network
+
+  frontend:
+    build:
+      context: ./src/app/frontend
+    container_name: frontend
+    ports:
+      - "3000:3000"
+      # Add all environment variables here
+    environment:
+      - PORT=3000
+    volumes:
+      - ./src/app/frontend:/usr/src/app  # Optionally mount frontend folder for development
+    stdin_open: true
+    networks:
+      - gt-network
+
+networks:
+  gt-network:
+    driver: bridge
+
+# Volumes for persisting data
+volumes:
+  postgres_data:
+    driver: local
+  backend_data:
+    driver: local
+  frontend_data:
+    driver: local

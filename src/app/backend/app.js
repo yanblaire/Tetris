@@ -11,11 +11,11 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 
 // Import routes
-// const gameRoutes = require('./routes/game');  // Temporarily comment this out
+const gameRoutes = require('./routes/game');  
 const scoreRoutes = require('./routes/score');
 
 // Use the routes
-// app.use('/api/game', gameRoutes);  // Temporarily comment this out
+app.use('/api/game', gameRoutes);  
 app.use('/api/score', scoreRoutes);
 
 // Basic route for testing server
